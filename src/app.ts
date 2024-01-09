@@ -7,6 +7,8 @@ import { isStrongPassword } from './utils/passwordUtils';
 import cors from 'cors';
 import path from 'path';
 import { sequelize, UserInstance } from './sequelize';
+import fs from 'fs';
+
 
 sequelize
   .authenticate()
@@ -18,7 +20,7 @@ sequelize
   });
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 const SECRET_KEY = '31feedaf16319e72fb49ff351b4ad1d2d2fac58b5cbba8d0f913a79df8472f3a';
 const SALT_ROUNDS = 10;
 
@@ -26,6 +28,18 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta para /home
+app.get('/index', (req, res) => {
+  res.send('¡Bienvenido a la página de inicio!');
+});
+
+// Inicia el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
+
+
 
 app.get('/test-database', async (req, res) => {
   try {
@@ -37,13 +51,65 @@ app.get('/test-database', async (req, res) => {
   }
 });
 
-app.get('/login', (req, res) => renderPage(res, 'login.html'));
-app.get('/register', (req, res) => renderPage(res, 'register.html'));
-app.get('/', (req, res) => res.redirect('/index'));
+// comento ahora : app.get('/login', (req, res) => renderPage(res, 'login.html'));
+// idem arriba app.get('/register', (req, res) => renderPage(res, 'register.html'));
+//app.get('/', (req, res) => res.redirect('/index'));
 app.get('/index', (req, res) => renderPage(res, 'index.html'));
 app.get('/home', (req, res) => renderPage(res, 'home.html'));
 
-app.post('/register', async (req: Request, res: Response) => {
+// Ruta para /login
+app.get('/login', (req, res) => {
+  // Procesar lógica si es necesario
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Ruta para /register
+app.get('/register', (req, res) => {
+  // Procesar lógica si es necesario
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+
+
+ app.post('/register', async (req: Request, res: Response) => {
+  try {
+    const { password, ...userData } = req.body;
+    console.log('Contraseña recibida:', password);
+
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: 'La contraseña no cumple con los requisitos de seguridad' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    // Procesar el campo de la foto
+    const photoFile: Express.Multer.File | undefined = req.file;
+
+    if (!photoFile) {
+      return res.status(400).json({ error: 'Foto no proporcionada en el formulario' });
+    }
+
+    const photoPath = `/uploads/${photoFile.filename}`;
+
+    // Almacena la foto en algún lugar accesible en tu servidor (puede requerir configuración adicional)
+    fs.writeFileSync(path.join(__dirname, 'public', 'uploads', photoFile.filename), photoFile.buffer);
+
+
+    const newUser = await sequelize.models.User.create({
+      ...userData,
+      password: hashedPassword,
+      photo: photoPath,
+    });
+
+    res.redirect('/home');
+  } catch (error) {
+    console.error('Error al registrar el usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor', details: (error as Error).message });
+  }
+}); 
+
+//comento lo de abajo porque no funciona 05-01 
+
+/* app.post('/register', async (req: Request, res: Response) => {
   try {
     const { password, ...userData } = req.body;
     console.log('Contraseña recibida:', password);
@@ -59,12 +125,15 @@ app.post('/register', async (req: Request, res: Response) => {
       password: hashedPassword,
     });
 
-    res.redirect('/home');
+    // Redirección con el código 303
+    res.redirect(303, '/home');
   } catch (error) {
     console.error('Error al registrar el usuario:', error);
     res.status(500).json({ error: 'Error interno del servidor', details: (error as Error).message });
   }
-});
+}); */
+
+
 
 app.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -92,14 +161,20 @@ function isUserInstance(model: Model<any, any>): model is UserInstance {
   return 'comparePassword' in model;
 }
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Servidor escuchando en el puerto ${PORT}`);
+// });
 
 function renderPage(res: Response, page: string) {
   res.sendFile(path.join(__dirname, 'public', page));
 }
 
+
+//añado
+// Manejo de rutas no encontradas
+app.use((req, res) => {
+  res.status(404).send('Página no encontrada');
+});
 
 
 
