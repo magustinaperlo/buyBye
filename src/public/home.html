@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Bienvenido a BuyBye</title>
+  <title>Bienvenid@</title>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -12,16 +12,64 @@
 
 <body>
   <div class="container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">BuyBye</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <div class="d-flex align-items-center mt-5">
+            <img id="user-photo" src="" alt="Foto del usuario" class="rounded-circle mr-3" width="50" height="50">
+            <h5 class="mb-0">¡Hola, <span id="user-name"></span>!</h5>
+          </div>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Jumbotron -->
     <div class="jumbotron">
-      <h1 class="display-4">¡Bienvenido a BuyBye!</h1>
+      <h1 class="display-4">¡Bienvenid@!</h1>
       <p class="lead">Gracias por registrarte. Estamos encantados de tenerte como parte de nuestra comunidad.</p>
       <hr class="my-4">
       <p>Ponte en contacto con nosotros:</p>
       <p>Teléfono: 19 99778-6160</p>
-      <p>Correo electrónico: contato@buybye.com.br</p>
+      <p>Correo electrónico: contacto@buybye.com.br</p>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/dist/index.umd.min.js"></script>
+  <script>
+    console.log('Antes de la importación de jwt-decode');
 
+    const jwt_decode = require('jwt-decode');
+
+    // Obtén el token almacenado en localStorage
+    const token = localStorage.getItem('token');
+    console.log('estoy en home.js:');
+
+    if (token) {
+      console.log('estoy en el if del home.js:');
+      // Decodifica el token para obtener la información del usuario
+      const decodedToken = jwt_decode(token);
+
+      const photoPath = decodedToken.photoPath;
+
+      // Mostrar la foto del usuario en tu interfaz de usuario
+      const photoElement = document.getElementById('user-photo');
+      photoElement.src = photoPath;
+
+      // Obtener el nombre del usuario del token
+      const userName = decodedToken.userName;
+
+      // Mostrar el nombre del usuario en tu interfaz de usuario
+      const userNameElement = document.getElementById('user-name');
+      userNameElement.innerText = userName;
+
+      console.log('Usuario ID:', decodedToken.userId);
+      console.log('Email del usuario:', decodedToken.email);
+      console.log('Nombre del usuario:', userName);
+    }
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

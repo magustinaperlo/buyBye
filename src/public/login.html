@@ -19,46 +19,67 @@
       <button type="button" onclick="login()">Iniciar Sesión</button>
     </form>
 
- 
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error de Inicio de Sesión</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          El correo electrónico o la contraseña son inválidos. Por favor, inténtalo de nuevo.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+     console.log('Contraseña enviada desde el frontend:', password);
   
-  <!-- ... -->
-
-<script>
-  async function login() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Manejar la respuesta exitosa, por ejemplo, guardar el token en el almacenamiento local
-        console.log('Inicio de sesión exitoso:', data);
-
-        // Redirigir al usuario a la página home después del inicio de sesión exitoso
-        window.location.href = '/home';
-      } else {
-        // Manejar errores de inicio de sesión
-        console.error('Error de inicio de sesión:', data.error);
+      try {
+        const response = await fetch('http://localhost:4000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+  
+        if (response.ok) {
+          // Manejar la respuesta exitosa, por ejemplo, guardar el token en el almacenamiento local
+          const data = await response.json();
+          console.log('Inicio de sesión exitoso:', data);
+  
+          // Redirigir al usuario a la página home después del inicio de sesión exitoso
+          window.location.href = '/home';
+        } else {
+          // Manejar errores de inicio de sesión
+          const data = await response.json();
+          console.error('Error de inicio de sesión:', data.error);
+  
+          // Mostrar el modal de error
+          $('#errorModal').modal('show');
+        }
+      } catch (error) {
+        // Manejar errores de red
+        console.error('Error de red:', error);
       }
-    } catch (error) {
-      console.error('Error de red:', error);
     }
-  }
-</script>
-
-
-</body>
+  </script>
+  
 </html>

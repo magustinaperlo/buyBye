@@ -5,231 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-
-  <title>Registrarse</title>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/imask"></script>
 </head>
 <body>
   <div class="container mt-5">
     <h1>Registrarse</h1>
-    <form id="registrationForm" action="/register" method="post"  enctype="multipart/form-data">
-     
-      <!-- Nombre -->
+    <form id="registrationForm" action="/register" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="nombre">Nombre:</label>
         <input type="text" class="form-control" id="nombre" name="name" required>
       </div>
-
-      <!-- CPF con mascara -->
       <div class="form-group">
         <label for="cpf">CPF:</label>
         <input type="text" class="form-control" id="cpf" name="cpf" required>
       </div>
-
-      <!-- Fecha de nacimiento con mascara -->
       <div class="form-group">
         <label for="fechaNacimiento">Fecha de Nacimiento:</label>
         <input type="date" class="form-control" id="fechaNacimiento" name="birthdate" required>
       </div>
-
-      <!-- Número de celular con mascara -->
       <div class="form-group">
         <label for="numeroCelular">Número de Celular:</label>
         <input type="text" class="form-control" id="numeroCelular" name="phone_number" required>
       </div>
-
-      <!-- Foto -->
-      <div class="form-group">
-        <label for="foto">Foto:</label>
-        <input type="file" class="form-control" id="foto" name="photo" accept="image/*" required>
-      </div>
-
-        <!-- Estado -->
       <div class="form-group">
         <label for="estado">Estado:</label>
         <input type="text" class="form-control" id="estado" name="state" required>
       </div>
-
-      <!-- Ciudad -->
       <div class="form-group">
         <label for="ciudad">Ciudad:</label>
         <input type="text" class="form-control" id="ciudad" name="city" required>
       </div>
-
-      <!-- Activo -->
-      <div class="form-group">
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="activo" name="active" checked>
-          <label class="form-check-label" for="activo">Activo</label>
-        </div>
-      </div>
-
-      <!-- Correo electrónico -->
-      <div class="form-group">
+        <div class="form-group">
         <label for="correoElectronico">Correo Electrónico:</label>
         <input type="text" class="form-control" id="correoElectronico" name="email" required>
       </div>
-
-      <!-- Contraseña -->
-      <div class="form-group">
+        <div class="form-group">
         <label for="password">Contraseña:</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
-
-      <!-- Confirmación de contraseña -->
       <div class="form-group">
         <label for="confirmPassword">Confirmar Contraseña:</label>
         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
       </div>
-
-      <!-- Botón de enviar -->
+        <div class="form-group">
+        <label for="foto">Foto:</label>
+        <input type="file" class="form-control" id="foto" name="photo" accept="image/*" required>
+      </div>
       <button id="registroButton" type="submit" class="btn btn-primary">Registrarse</button>
     </form>
   </div>
-
-  
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-  
-  <script src="https://cdn.jsdelivr.net/npm/imask"></script>
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      
-      document.getElementById('registroButton').addEventListener('click', (event) => {
-    event.preventDefault(); // Esto evita que el formulario se envíe automáticamente
-  
-    const password = document.getElementById('password').value;
-    // Agrega otros campos según sea necesario
-    console.log('Contraseña leida:', password);
-  
-    axios.post('/register', { password: password, otherData: 'otroDato' })
-      .then(response => {
-        console.log(response.data); // Esto imprimirá la respuesta del servidor
-        
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  });
-
-
-    });
-  </script> -->
-
-<!--   
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('registroButton').addEventListener('click', (event) => {
-        event.preventDefault();
-  
-        // Serializar el formulario
-        const formData = new FormData(document.getElementById('registrationForm'));
-  
-        // Obtener la contraseña utilizando formData
-        const password = formData.get('password');
-        console.log('Contraseña leída 1:', password);
-  
-        axios.post('/register', formData)
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      });
-    });
-  </script> -->
-  
-
-  <!-- 3er intento para el script lea la clave -->
-<!--   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('registroButton').addEventListener('click', async (event) => {
-        event.preventDefault();
-  
-        // Serializar el formulario
-        const formData = new FormData(document.getElementById('registrationForm'));
-  
-        // Obtener la contraseña utilizando formData
-        const password = formData.get('password');
-        console.log('Contraseña leída 1:', password);
-  
-         try {
-           const response = await axios.post('/register', {
-             ...Object.fromEntries(formData.entries()), // Convertir el FormData a un objeto
-             password: password,
-           });
-
-         
-  
-          console.log(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      });
-    });
-  </script> -->
-
-
-  <!-- 4 intento para el script lea la clave -->
+</body>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('registroButton').addEventListener('click', async (event) => {
         event.preventDefault();
   
-
-        // Crear un nuevo objeto FormData
-        //const formData = new FormData();
-  
         // Serializar el formulario
         const formData = new FormData(document.getElementById('registrationForm'));
-           // Obtener la contraseña utilizando formData
+  
+        const response = await fetch('/register', {
+          method: 'POST',
+          body: formData,
+        });
+  
+        const result = await response.json();
+  
+        if (result.success) {
+          // Registro exitoso, puedes redirigir o hacer otras acciones
+          window.location.href = '/index';
+        } else {
+          // Muestra una ventana modal con el mensaje de error
+          alert(result.message || 'Error desconocido durante el registro');
+        }
+  
+        // Obtener la contraseña utilizando formData
         const password = formData.get('password');
         console.log('Contraseña leída 1:', password);
-
-       /*  // Obtener todos los campos del formulario
-        const form = document.getElementById('registrationForm');
-        const elements = form.elements;
-  
-        // Iterar sobre los campos y agregarlos al FormData
-        for (let i = 0; i < elements.length; i++) {
-          const element = elements[i];
-          const name = element.name;
-          const value = element.value;
-  
-          // Ignorar los campos sin nombre y los campos de archivo (serán manejados por separado)
-          if (name && element.type !== 'file') {
-            formData.append(name, value);
-          }
-       
-        } */
-  
-        // Agregar el archivo (foto) al FormData
-        const photoInput = document.getElementById('foto');
-        if (photoInput.files.length > 0) {
-          formData.append('photo', photoInput.files[0]);
-        }
   
         try {
-          const response = await axios.post('/register', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+          const response = await axios.post('/register', {
+            ...Object.fromEntries(formData.entries()), // Convertir el FormData a un objeto
+            password: password,
           });
-  
-          console.log(response.data);
+          console.log('Respuesta exitosa:', response.data);
         } catch (error) {
-          console.error(error);
+          console.error('Error en la solicitud:', error);
+  
+          if (error.response) {
+            console.error('Respuesta del servidor:', error.response.data);
+            alert('Error: ' + error.response.data.error);
+          } else if (error.request) {
+            console.error('No se recibió respuesta del servidor');
+          } else {
+            console.error('Error de configuración de la solicitud', error.message);
+          }
         }
       });
     });
   </script>
-  
-  
-
-  
-  
-</body>
 </html>
